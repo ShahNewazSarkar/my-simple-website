@@ -1,0 +1,21 @@
+{
+  "name": "nodejs-mysql-api",
+  "version": "1.0.0",
+  "description": "A REST API with Nodejs and Mysql",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shah Newaz Sarkar Setu",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^9.6.0",
+    "body-parser": "^1.20.3",
+    "express": "^4.21.2",
+    "mysql2": "^3.11.5",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

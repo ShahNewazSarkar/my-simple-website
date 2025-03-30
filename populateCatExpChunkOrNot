@@ -1,0 +1,130 @@
+const { Category, Expense } = require('./models'); // Assuming models are set up
+
+// Function to generate random data
+const generateRandomData = () => {
+  const categoryNames = ['movie', 'lunch', 'ciggarette', 'bus', 'dress'];
+  const randomName = categoryNames[Math.floor(Math.random() * categoryNames.length)]; // Random category name
+  const user_id = Math.floor(Math.random() * 100) + 1; // Random user_id between 1 and 100
+  const amount = parseFloat((Math.random() * (1000 - 10) + 10).toFixed(2)); // Random amount between 10 and 1000, rounded to 2 decimal places
+
+  // Description corresponding to the category name
+  const descriptions = {
+    movie: 'Expense for watching a movie',
+    lunch: 'Expense for having lunch',
+    ciggarette: 'Expense for buying cigarettes',
+    bus: 'Expense for bus fare',
+    dress: 'Expense for buying a dress',
+  };
+  const description = descriptions[randomName]; // Get description based on category name
+
+  return { user_id, name: randomName, amount, description };
+};
+
+// Function to populate tables WITHOUT chunking
+const populateWithoutChunking = async () => {
+  try {
+    console.time('Without Chunking'); // Start timer
+    const totalRecords = 1000; // Number of records to insert
+
+    for (let i = 0; i < totalRecords; i++) {
+      const { user_id, name, amount, description } = generateRandomData();
+
+      // Check if the category already exists for the user
+      let category = await Category.findOne({ where: { user_id, name } });
+
+      if (!category) {
+        // Create a new category if it doesn't exist
+        category = await Category.create({ user_id, name, amount });
+      } else {
+        // Update the existing category's amount
+        category.amount = parseFloat(category.amount) + amount;
+        await category.save();
+      }
+
+      // Create a new expense record
+      await Expense.create({
+        user_id,
+        category_id: category.id,
+        amount,
+        description,
+      });
+
+      // Log progress
+      if (i % 100 === 0) {
+        console.log(`Inserted ${i} records without chunking...`);
+      }
+    }
+
+    console.timeEnd('Without Chunking'); // End timer and log time
+    console.log('Data population without chunking completed successfully.');
+  } catch (error) {
+    console.error('Error populating tables without chunking:', error);
+  }
+};
+
+// Function to populate tables WITH chunking
+const populateWithChunking = async () => {
+  try {
+    console.time('With Chunking'); // Start timer
+    const totalRecords = 1000; // Number of records to insert
+    const chunkSize = 10; // Number of records to insert in each chunk
+    let expenses = [];
+
+    for (let i = 0; i < totalRecords; i++) {
+      const { user_id, name, amount, description } = generateRandomData();
+
+      // Check if the category already exists for the user
+      let category = await Category.findOne({ where: { user_id, name } });
+
+      if (!category) {
+        // Create a new category if it doesn't exist
+        category = await Category.create({ user_id, name, amount });
+      } else {
+        // Update the existing category's amount
+        category.amount = parseFloat(category.amount) + amount;
+        await category.save();
+      }
+
+      // Add expense data to the chunk
+      expenses.push({
+        user_id,
+        category_id: category.id,
+        amount,
+        description,
+      });
+
+      // If the chunk is full, insert it into the database
+      if (expenses.length === chunkSize) {
+        await Expense.bulkCreate(expenses); // Insert the chunk
+        expenses = []; // Reset the chunk
+      }
+
+      // Log progress
+      if (i % 100 === 0) {
+        console.log(`Processed ${i} records with chunking...`);
+      }
+    }
+
+    // Insert any remaining records in the last chunk
+    if (expenses.length > 0) {
+      await Expense.bulkCreate(expenses);
+    }
+
+    console.timeEnd('With Chunking'); // End timer and log time
+    console.log('Data population with chunking completed successfully.');
+  } catch (error) {
+    console.error('Error populating tables with chunking:', error);
+  }
+};
+
+// Run both functions and compare times
+const runComparison = async () => {
+  console.log('Starting data population without chunking...');
+  await populateWithoutChunking();
+
+  console.log('\nStarting data population with chunking...');
+  await populateWithChunking();
+};
+
+// Run the comparison
+runComparison();
