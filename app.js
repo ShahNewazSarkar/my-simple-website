@@ -8,6 +8,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
 const accountRoutes = require('./routes/accountRoutes');  // ✅ New Route
 const transactionRoutes = require('./routes/transactionRoutes'); // ✅ New Route
+const budgetRoutes = require('./routes/budgetRoutes'); 
 
 // Middleware
 app.use(bodyParser.json());
@@ -18,5 +19,6 @@ app.use('/categories', categoryRoutes);
 app.use('/expenses', expenseRoutes);
 app.use('/accounts', accountRoutes);  // ✅ New Route
 app.use('/transactions', transactionRoutes);  // ✅ New Route
+app.use('/budgets', budgetRoutes);
 
 module.exports = app;
