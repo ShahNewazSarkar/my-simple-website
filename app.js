@@ -9,6 +9,7 @@ const expenseRoutes = require('./routes/expenseRoutes');
 const accountRoutes = require('./routes/accountRoutes');  // ✅ New Route
 const transactionRoutes = require('./routes/transactionRoutes'); // ✅ New Route
 const budgetRoutes = require('./routes/budgetRoutes'); 
+const authRoutes = require("./routes/authRoutes");
 
 // Middleware
 app.use(bodyParser.json());
@@ -20,5 +21,12 @@ app.use('/expenses', expenseRoutes);
 app.use('/accounts', accountRoutes);  // ✅ New Route
 app.use('/transactions', transactionRoutes);  // ✅ New Route
 app.use('/budgets', budgetRoutes);
+app.use('/users', authRoutes);
+
+
+app.get("/cache/debug", (req, res) => {
+  const localCache = require("./localCache");
+  res.json(localCache.debugAll());
+});
 
 module.exports = app;
