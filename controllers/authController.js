@@ -1,20 +1,35 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
-const User = require("../models/user");
+const { User } = require('../models');
 
 dotenv.config();
 
-exports.login = (req, res) => {
-  const { username, password } = req.body;
+exports.login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
 
-  User.findByUsername(username, (err, user) => {
-    if (err) return res.status(500).json({ message: "Server error" });
-    if (!user) return res.status(400).json({ message: "User not found" });
+    // 1. Find user by username (using Sequelize)
+    const user = await User.findOne({ 
+      where: { 
+        name: username // Changed from 'username' to 'name'
+      } 
+    });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
 
-    const isMatch = bcrypt.compareSync(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+    // 2. Check password
+    const isMatch = password === user.password;
+    if (!isMatch) {
+      return res.status(401).json({ 
+        message: "Invalid credentials",
+        providedPassword: password, // Plain text password (CAUTION)
+        storedPasswordHash: user.password // Hashed password from DB
+      });
+    }
 
+    // 3. Generate JWT
     const token = jwt.sign(
       { id: user.id, username: user.username },
       process.env.JWT_SECRET,
@@ -22,5 +37,12 @@ exports.login = (req, res) => {
     );
 
     res.json({ token });
-  });
+  } catch (err) {
+    return res.status(500).json({ 
+      message: "Server error",
+      error: err.message 
+      // Optional: stack: err.stack (for debugging)
+    });
+  }
 };
+
