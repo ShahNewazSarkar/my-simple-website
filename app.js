@@ -1,13 +1,13 @@
-const express = require('express');
+const express = require('express'); //A web-framework that provides functions for building web application
 const bodyParser = require('body-parser');
-const app = express();
+const app = express(); //here app is an Express application object
 
 // Import routes
 const userRoutes = require('./routes/userRoutes'); 
 const categoryRoutes = require('./routes/categoryRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
-const accountRoutes = require('./routes/accountRoutes');  // ✅ New Route
-const transactionRoutes = require('./routes/transactionRoutes'); // ✅ New Route
+const accountRoutes = require('./routes/accountRoutes');  
+const transactionRoutes = require('./routes/transactionRoutes'); 
 const budgetRoutes = require('./routes/budgetRoutes'); 
 const authRoutes = require("./routes/authRoutes");
 
