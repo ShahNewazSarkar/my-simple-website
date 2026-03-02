@@ -4,15 +4,15 @@ FROM node:18
 # Create app directory
 WORKDIR /usr/src/app
 
-# Copy package.json and install dependencies
+# Install dependencies first (better caching)
 COPY package*.json ./
 RUN npm install
 
-# Copy the rest of the application code
+# Copy application source
 COPY . .
 
-# Expose port (match with the one in your app)
-EXPOSE 3000
+# Expose app port
+EXPOSE 3055
 
-# Start the app
-CMD ["node", "src/app.js"]
+# Start the application
+CMD ["node", "server.js"]

@@ -26,7 +26,7 @@ exports.createUser = async (req, res) => {
     // Send back the response with the message
     res.status(201).json({
       success: true,
-      message: 'User create successfully, yesss!',
+      message: 'User create successfully, yes!',
       data: user,
       //pass:hashedPassword
     });
