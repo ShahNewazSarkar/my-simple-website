@@ -4,10 +4,6 @@ FROM node:23
 # Create app directory
 WORKDIR /usr/src/app
 
-# Install dependencies first (better caching)
-COPY package*.json ./
-RUN npm install
-
 # Copy application source
 COPY . .
 
