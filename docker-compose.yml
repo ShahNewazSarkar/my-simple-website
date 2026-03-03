@@ -17,7 +17,7 @@ services:
     volumes:
       - .:/usr/src/app
     # Optional: use nodemon to auto-reload on code changes
-    command: npm install && npx nodemon server.js
+    command: sh -c "npm install && npx nodemon server.js"
 
   db:
     image: mysql:8.0

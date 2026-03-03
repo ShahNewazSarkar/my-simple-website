@@ -9,6 +9,3 @@ COPY . .
 
 # Expose app port
 EXPOSE 3055
-
-# Start the application
-CMD ["node", "server.js"]
