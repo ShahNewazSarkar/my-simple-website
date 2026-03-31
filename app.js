@@ -10,6 +10,7 @@ const accountRoutes = require('./routes/accountRoutes');
 const transactionRoutes = require('./routes/transactionRoutes'); 
 const budgetRoutes = require('./routes/budgetRoutes'); 
 const authRoutes = require("./routes/authRoutes");
+const logRoutes = require("./routes/logRoutes");
 
 // Middleware
 app.use(bodyParser.json());
@@ -23,6 +24,7 @@ app.use('/expenses', expenseRoutes);
 app.use('/accounts', accountRoutes);  // ✅ New Route
 app.use('/transactions', transactionRoutes);  // ✅ New Route
 app.use('/budgets', budgetRoutes);
+app.use("/logs", logRoutes);
 
 
 
