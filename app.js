@@ -16,12 +16,14 @@ app.use(bodyParser.json());
 
 // Use routes
 app.use("/users", userRoutes);
+app.use('/users', authRoutes);
+
 app.use('/categories', categoryRoutes);
 app.use('/expenses', expenseRoutes);
 app.use('/accounts', accountRoutes);  // ✅ New Route
 app.use('/transactions', transactionRoutes);  // ✅ New Route
 app.use('/budgets', budgetRoutes);
-app.use('/users', authRoutes);
+
 
 
 app.get("/cache/debug", (req, res) => {

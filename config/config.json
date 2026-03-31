@@ -4,20 +4,32 @@
     "password": "root",
     "database": "database_development",
     "host": "db",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "redis": {
+      "host": "redis",
+      "port": 6379
+    }
   },
   "test": {
     "username": "root",
     "password": "root",
     "database": "database_test",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "redis": {
+      "host": "127.0.0.1",
+      "port": 6379
+    }
   },
   "production": {
     "username": "root",
     "password": "root",
     "database": "database_production",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "redis": {
+      "host": "127.0.0.1",
+      "port": 6379
+    }
   }
 }

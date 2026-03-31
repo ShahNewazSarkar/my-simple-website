@@ -1,32 +1,32 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
+//Many production systems use a Short-lived Access Token and a Long-lived Refresh Token
+
 const authMiddleware = async (req, res, next) => {
   try {
-    // 1. Get token from header
+    // Get token from header
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
     if (!token) {
-      return res.status(401).json({ message: 'No token, authorization denied' });
+      return res.status(401).json({ 
+        success: false,
+        message: 'No token, authorization denied' 
+      });
     }
 
-    // 2. Verify token
+    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    // 3. Find user and attach to request
-    //const user = await User.findById(decoded.id).select('-password');
-    
-    // if (!user) {
-    //   return res.status(401).json({ message: 'User not found' });
-    // }
-    //console.log(token);
-    //req.user = user;
+    // Attach decoded user info to request
+    req.user = decoded;
     next();
   } catch (err) {
     console.error('Authentication error:', err.message);
     res.status(401).json({ 
+      success: false,
       message: 'Token is not valid',
-      error: err.message,
+      error: err.message
     });
   }
 };

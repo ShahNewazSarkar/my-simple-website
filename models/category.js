@@ -10,13 +10,13 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // Define associations here if needed
+      // Category.hasMany(models.Budget);
+      // Category.hasMany(models.Expense);
     }
   }
   Category.init({
-    user_id: DataTypes.INTEGER,
-    name: DataTypes.STRING,
-    amount: DataTypes.DECIMAL
+    name: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Category',

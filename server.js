@@ -1,8 +1,21 @@
 const http = require('http');
 const app = require('./app');
+const { sequelize } = require('./models');
+const populateCategories = require('./seeders/populateCategories');
 const server = http.createServer(app);
 
 const port = 3055;
+
+// Initialize database and seed data on startup
+sequelize.authenticate().then(async () => {
+  console.log('✅ Database connection established.');
+  
+  // Seed categories if they don't exist
+  await populateCategories();
+}).catch(err => {
+  console.error('❌ Database connection failed:', err.message);
+});
+
 app.use((req, res, next) => {
     console.log(`New request from ${req.ip} to ${req.method} ${req.url}`);
     next();

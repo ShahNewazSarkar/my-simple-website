@@ -8,15 +8,16 @@ services:
       - "3055:3055"
     depends_on:
       - db
+      - redis
     environment:
       DB_HOST: db
       DB_USER: root
       DB_PASSWORD: root
       DB_NAME: database_development
-    # Add this volume so local code changes reflect in the container
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     volumes:
       - .:/usr/src/app
-    # Optional: use nodemon to auto-reload on code changes
     command: sh -c "npm install && npx nodemon server.js"
 
   db:
@@ -30,6 +31,13 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:7
+    container_name: redis_server
+    restart: always
+    ports:
+      - "6379:6379"
 
 volumes:
   mysql_data:

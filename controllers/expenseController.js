@@ -1,5 +1,61 @@
-const { Expense } = require('../models');
+const { Expense, Category } = require('../models');
 const localCache = require("../localCache"); // Adjust path as needed
+
+const createExpense = async (req, res) => {
+  try {
+    const { category_name, amount, description } = req.body;
+    const user_id = req.user.id;
+
+    // Validate input
+    if (!category_name || !amount || !description) {
+      return res.status(400).json({
+        success: false,
+        message: 'category_name, amount, and description are required.'
+      });
+    }
+
+    const amountNum = parseFloat(amount);
+    if (isNaN(amountNum) || amountNum <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Amount must be a positive number.'
+      });
+    }
+
+    // Find category by name for this user
+    const category = await Category.findOne({
+      where: { name: category_name }
+    });
+
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: 'Category not found for this user.'
+      });
+    }
+
+    // Create expense
+    const expense = await Expense.create({
+      user_id,
+      category_id: category.id,
+      amount: amountNum,
+      description
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Expense created successfully.',
+      data: expense
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while creating the expense.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
 
 // Get expenses between two dates
 const getExpensesBetweenDates = async (req, res) => {
@@ -68,4 +124,8 @@ const getTotalSpentByUser = async (req, res) => {
   }
 };
 
-module.exports = { getExpensesBetweenDates, getTotalSpentByUser };
+module.exports = { 
+  createExpense,
+  getExpensesBetweenDates, 
+  getTotalSpentByUser 
+};
