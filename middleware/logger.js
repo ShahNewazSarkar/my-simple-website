@@ -1,6 +1,6 @@
 // middleware/logger.js
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
-const s3 = require(".s3");
+const s3 = require("../s3");
 const { v4: uuidv4 } = require("uuid");
 
 const BUCKET_NAME = "money-expense-tracker";
